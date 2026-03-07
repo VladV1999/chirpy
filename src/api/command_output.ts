@@ -6,6 +6,20 @@ export function logRequests(req: Request, res: Response): void {
 }
 
 export function requestsReset(req: Request, res: Response): void {
+    console.log("Reached this function");
     config.fileServerHits = 0;
     res.send(`Hits: ${config.fileServerHits}`);
+}
+
+export function adminLogRequests(req: Request, res: Response): void {
+    res.set({
+        'Content-Type': 'text/html; charset=utf-8',
+    });
+    res.send(`<html>
+  <body>
+    <h1>Welcome, Chirpy Admin</h1>
+    <p>Chirpy has been visited ${config.fileServerHits} times!</p>
+  </body>
+</html>
+`);   
 }
