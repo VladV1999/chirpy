@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { respondWithError, respondWithJSON } from "./json.js";
 
 export async function handlerChirpsValidate(req: Request, res: Response) {
     type parameters = {
@@ -7,17 +8,19 @@ export async function handlerChirpsValidate(req: Request, res: Response) {
 
     const params: parameters = req.body;
     const maxLength = 140;
-    if (!(Object.hasOwn(params, "body"))) {
-        res.status(400).send({
-            "error": "Invalid JSON",
-        })
-    }
     if (params.body.length > maxLength) {
-        res.status(400).send({
-            "error": "Chirp is too long",
-        })
+        respondWithError(res, 400, "Chirp is too long");
+        return;
     }
-    res.status(200).send({
-        "valid": true
-    })
+    const badWords = ["kerfuffle", "sharbert", "fornax"];
+    const splitBody = params.body.split(' ');
+    for (let i = 0; i < splitBody.length; i++) {
+        if (badWords.includes(splitBody[i].toLowerCase())) {
+            splitBody[i] = "****"
+        }
+    }
+    const newBody = splitBody.join(' ');
+    respondWithJSON(res, 200, {
+        cleanedBody: newBody,
+  });
 }
