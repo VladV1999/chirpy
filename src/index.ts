@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { adminLogRequests, requestsReset } from "./api/command_output.js";
-import { middlewareHandlerError } from "./api/error_handler.js";
+import { middlewareHandlerError } from "./api/error.js";
 import { middlewareLogResponses } from "./api/log_responses.js";
 import { middlewareMetricsInc } from "./api/metrics_inc.js";
 import { handlerReadiness } from "./api/readiness.js";
