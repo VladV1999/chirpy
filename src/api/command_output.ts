@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
 import { config } from "../config.js";
+import { deleteAllUsers } from "../db/queries/users.js";
 
 export function logRequests(req: Request, res: Response): void {
-    res.send(`Hits: ${config.fileServerHits}`);
+    res.send(`Hits: ${config.api.fileServerHits}`);
 }
 
-export function requestsReset(req: Request, res: Response): void {
-    console.log("Reached this function");
-    config.fileServerHits = 0;
-    res.send(`Hits: ${config.fileServerHits}`);
+export async function requestsReset(req: Request, res: Response): Promise<void> {
+    if (config.api.platform !== "dev") {
+        res.status(403).send();
+        return;
+    }
+    await deleteAllUsers();
+    res.status(200).send();
 }
 
 export function adminLogRequests(req: Request, res: Response): void {
@@ -18,7 +22,7 @@ export function adminLogRequests(req: Request, res: Response): void {
     res.send(`<html>
   <body>
     <h1>Welcome, Chirpy Admin</h1>
-    <p>Chirpy has been visited ${config.fileServerHits} times!</p>
+    <p>Chirpy has been visited ${config.api.fileServerHits} times!</p>
   </body>
 </html>
 `);   

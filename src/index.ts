@@ -3,6 +3,7 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import express, { NextFunction, Request, Response } from "express";
 import postgres from "postgres";
 import { adminLogRequests, requestsReset } from "./api/command_output.js";
+import { handlerCreateUser } from "./api/create_user.js";
 import { middlewareHandlerError } from "./api/error.js";
 import { middlewareLogResponses } from "./api/log_responses.js";
 import { middlewareMetricsInc } from "./api/metrics_inc.js";
@@ -18,8 +19,7 @@ app.use(middlewareLogResponses);
 app.use(express.json());
 app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 app.get("/api/healthz", handlerReadiness);
-app.get("/admin/metrics", adminLogRequests);
-app.post("/admin/reset", requestsReset);
+app.post("/api/users", handlerCreateUser);
 app.post("/api/validate_chirp", async (
     req: Request,
     res: Response,
@@ -31,6 +31,8 @@ app.post("/api/validate_chirp", async (
         next(err);
     }
 });
+app.get("/admin/metrics", adminLogRequests);
+app.post("/admin/reset", requestsReset);
 app.use(middlewareHandlerError);
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
