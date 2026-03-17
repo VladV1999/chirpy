@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
+import { addChirp } from "../db/queries/chirps.js";
 import { BadRequestError } from "./error.js";
 import { respondWithJSON } from "./json.js";
-export async function handlerChirpsValidate(req: Request, res: Response) {
+export async function handlerChirpsAdd(req: Request, res: Response) {
     type parameters = {
     body: string;
+    userId: string,
     };
-
+    
     const params: parameters = req.body;
     const maxLength = 140;
     if (params.body.length > maxLength) {
@@ -19,7 +21,13 @@ export async function handlerChirpsValidate(req: Request, res: Response) {
         }
     }
     const newBody = splitBody.join(' ');
-    respondWithJSON(res, 200, {
-        cleanedBody: newBody,
+    const chirp = await addChirp({ 'body': newBody, 
+        'userId': params.userId});
+    respondWithJSON(res, 201, {
+        "id": chirp.id,
+        "createdAt": chirp.createdAt,
+        "updatedAt": chirp.updatedAt,
+        "body": chirp.body,
+        "userId": chirp.userId,
   });
-}
+};
