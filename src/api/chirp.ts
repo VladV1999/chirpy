@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addChirp } from "../db/queries/chirps.js";
+import { addChirp, getChirps } from "../db/queries/chirps.js";
 import { BadRequestError } from "./error.js";
 import { respondWithJSON } from "./json.js";
 export async function handlerChirpsAdd(req: Request, res: Response) {
@@ -31,3 +31,8 @@ export async function handlerChirpsAdd(req: Request, res: Response) {
         "userId": chirp.userId,
   });
 };
+
+export async function handlerDisplayAllChirps(req: Request, res: Response) {
+    const chirps = await getChirps();
+    respondWithJSON(res, 200, chirps);
+}

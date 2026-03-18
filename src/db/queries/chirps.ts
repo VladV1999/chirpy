@@ -8,3 +8,8 @@ export async function addChirp(chirp: NewChirp) {
     .returning();
     return result;
 }
+
+export async function getChirps() {
+    const data = await db.select().from(chirps);
+    return data;
+}

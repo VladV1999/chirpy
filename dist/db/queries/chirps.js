@@ -7,3 +7,7 @@ export async function addChirp(chirp) {
         .returning();
     return result;
 }
+export async function getChirps() {
+    const data = await db.select().from(chirps);
+    return data;
+}

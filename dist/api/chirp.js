@@ -1,4 +1,4 @@
-import { addChirp } from "../db/queries/chirps.js";
+import { addChirp, getChirps } from "../db/queries/chirps.js";
 import { BadRequestError } from "./error.js";
 import { respondWithJSON } from "./json.js";
 export async function handlerChirpsAdd(req, res) {
@@ -26,3 +26,7 @@ export async function handlerChirpsAdd(req, res) {
     });
 }
 ;
+export async function handlerDisplayAllChirps(req, res) {
+    const chirps = await getChirps();
+    respondWithJSON(res, 200, chirps);
+}
