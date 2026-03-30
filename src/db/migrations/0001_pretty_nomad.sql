@@ -1,1 +1,0 @@
-ALTER TABLE "chirps" ADD COLUMN "body" text NOT NULL;
