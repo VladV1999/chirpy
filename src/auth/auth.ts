@@ -1,4 +1,5 @@
 import * as argon2 from "argon2";
+import { Request } from "express";
 import type { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
@@ -50,4 +51,13 @@ export function validateJWT(tokenString: string, secret: string): string {
         throw new Error("The user's id is undefined!");
     }
     return result.sub;
+}
+
+export function getBearerToken(req: Request): string {
+    const header = req.get('Authorization');
+    if (header === undefined) {
+        throw new Error("There is no authorization header in this request!");
+    }
+    const tokenString = header.replace('Bearer ', '');
+    return tokenString;
 }

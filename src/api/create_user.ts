@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
-import { NewUser } from "src/db/schema.js";
 import { hashPassword } from "../auth/auth.js";
 import { createUser } from "../db/queries/users.js";
 import { respondWithJSON } from "./json.js";
 
-export type UserResponse = Omit<NewUser, "hashedPassword">;
+export type UserResponse = {
+    id: string,
+    createdAt: Date,
+    updatedAt: Date,
+    email: string,
+    token: string,
+}
 export async function handlerCreateUser(req: Request, res: Response): Promise<void> {
     if (req.body.email === undefined) {
         throw new Error("There is no email field, please include an email field!");
