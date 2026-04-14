@@ -9,6 +9,7 @@ export type UserResponse = {
     updatedAt: Date,
     email: string,
     token: string,
+    refreshToken: string,
 }
 export async function handlerCreateUser(req: Request, res: Response): Promise<void> {
     if (req.body.email === undefined) {

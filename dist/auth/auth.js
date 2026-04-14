@@ -1,5 +1,7 @@
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import { randomBytes } from "node:crypto";
+import { UserNotAuthenticatedError } from "../api/error.js";
 export async function hashPassword(password) {
     try {
         const hash = await argon2.hash(password);
@@ -39,21 +41,26 @@ export function validateJWT(tokenString, secret) {
         result = jwt.verify(tokenString, secret);
     }
     catch (err) {
-        throw new Error("The token is invalid!");
+        throw new UserNotAuthenticatedError("The token is invalid!");
     }
     if (typeof result === "string") {
-        throw new Error("Something unexpected happened, the payload is a string!");
+        throw new UserNotAuthenticatedError("Something unexpected happened, the payload is a string!");
     }
     if (result.sub === undefined) {
-        throw new Error("The user's id is undefined!");
+        throw new UserNotAuthenticatedError("The user's id is undefined!");
     }
     return result.sub;
 }
 export function getBearerToken(req) {
     const header = req.get('Authorization');
     if (header === undefined) {
-        throw new Error("There is no authorization header in this request!");
+        throw new UserNotAuthenticatedError("There is no authorization header in this request!");
     }
     const tokenString = header.replace('Bearer ', '');
     return tokenString;
+}
+export function makeRefreshToken() {
+    const buf = randomBytes(32);
+    const bytes = buf.toString('hex');
+    return bytes;
 }

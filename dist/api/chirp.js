@@ -2,7 +2,7 @@ import { getBearerToken, validateJWT } from "../auth/auth.js";
 import { config } from "../config.js";
 import { addChirp, getChirpById, getChirps } from "../db/queries/chirps.js";
 import { BadRequestError } from "./error.js";
-import { respondWithJSON } from "./json.js";
+import { respondWithError, respondWithJSON } from "./json.js";
 export async function handlerChirpsAdd(req, res) {
     const params = req.body;
     const maxLength = 140;
@@ -17,17 +17,22 @@ export async function handlerChirpsAdd(req, res) {
         }
     }
     const newBody = splitBody.join(' ');
-    const tokenString = getBearerToken(req);
-    const userId = validateJWT(tokenString, config.api.secret);
-    const chirp = await addChirp({ 'body': newBody,
-        'userId': userId });
-    respondWithJSON(res, 201, {
-        "id": chirp.id,
-        "createdAt": chirp.createdAt,
-        "updatedAt": chirp.updatedAt,
-        "body": chirp.body,
-        "userId": chirp.userId,
-    });
+    try {
+        const tokenString = getBearerToken(req);
+        const userId = validateJWT(tokenString, config.api.secret);
+        const chirp = await addChirp({ 'body': newBody,
+            'userId': userId });
+        respondWithJSON(res, 201, {
+            "id": chirp.id,
+            "createdAt": chirp.createdAt,
+            "updatedAt": chirp.updatedAt,
+            "body": chirp.body,
+            "userId": chirp.userId,
+        });
+    }
+    catch (err) {
+        respondWithError(res, 401, "Unauthorized entry/malformed token");
+    }
 }
 ;
 export async function handlerDisplayAllChirps(req, res) {

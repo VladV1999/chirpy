@@ -18,6 +18,7 @@ export async function userByEmail(email: string) {
   .where(eq(users.email, email));
   return result;
 }
+
 export async function deleteAllUsers() {
   await db.delete(users);
 }

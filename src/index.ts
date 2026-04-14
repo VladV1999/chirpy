@@ -10,6 +10,8 @@ import { middlewareLogResponses } from "./api/log_responses.js";
 import { handlerLogin } from "./api/login.js";
 import { middlewareMetricsInc } from "./api/metrics_inc.js";
 import { handlerReadiness } from "./api/readiness.js";
+import { handlerRefresh } from "./api/refresh.js";
+import { handlerRevoke } from "./api/revoke.js";
 import { config } from "./config.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
@@ -23,6 +25,8 @@ app.get("/api/healthz", handlerReadiness);
 app.post("/api/users", handlerCreateUser);
 app.post("/api/chirps", handlerChirpsAdd);
 app.post("/api/login", handlerLogin);
+app.post("/api/revoke", handlerRevoke);
+app.post("/api/refresh", handlerRefresh);
 app.get("/api/chirps", handlerDisplayAllChirps);
 app.get("/api/chirps/:chirpId", handlerDisplayChirp);
 app.get("/admin/metrics", adminLogRequests);
