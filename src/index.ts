@@ -11,6 +11,7 @@ import { handlerLogin } from "./api/login.js";
 import { middlewareMetricsInc } from "./api/metrics_inc.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { handlerRefresh } from "./api/refresh.js";
+import { handlerResetCredentials } from "./api/reset.js";
 import { handlerRevoke } from "./api/revoke.js";
 import { config } from "./config.js";
 
@@ -28,6 +29,7 @@ app.post("/api/login", handlerLogin);
 app.post("/api/revoke", handlerRevoke);
 app.post("/api/refresh", handlerRefresh);
 app.get("/api/chirps", handlerDisplayAllChirps);
+app.put("/api/users", handlerResetCredentials)
 app.get("/api/chirps/:chirpId", handlerDisplayChirp);
 app.get("/admin/metrics", adminLogRequests);
 app.post("/admin/reset", requestsReset);

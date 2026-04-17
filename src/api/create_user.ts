@@ -11,6 +11,8 @@ export type UserResponse = {
     token: string,
     refreshToken: string,
 }
+
+export type UserWithoutPassword = Omit<UserResponse, "token" | "refreshToken">;
 export async function handlerCreateUser(req: Request, res: Response): Promise<void> {
     if (req.body.email === undefined) {
         throw new Error("There is no email field, please include an email field!");
