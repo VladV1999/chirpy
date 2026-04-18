@@ -1,6 +1,6 @@
 import { getBearerToken, hashPassword, validateJWT } from "../auth/auth.js";
 import { config } from "../config.js";
-import { getUserById, updateUser } from "../db/queries/users.js";
+import { updateUser } from "../db/queries/users.js";
 import { respondWithError, respondWithJSON } from "./json.js";
 export async function handlerResetCredentials(req, res) {
     let bearerToken;
@@ -27,16 +27,15 @@ export async function handlerResetCredentials(req, res) {
         respondWithError(res, 401, "Invalid or malformed token!");
         return;
     }
-    const user = await getUserById(id);
     const updatedUser = await updateUser(id, email, hashedPass);
+    if (updatedUser === undefined) {
+        respondWithError(res, 400, "Something went wrong with updating the user");
+    }
     const payload = {
         id: updatedUser.id,
         email: updatedUser.email,
         createdAt: updatedUser.createdAt,
         updatedAt: updatedUser.updatedAt,
     };
-    if (updatedUser === undefined) {
-        respondWithError(res, 400, "Something went wrong with updating the user");
-    }
     respondWithJSON(res, 200, payload);
 }
