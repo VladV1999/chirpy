@@ -22,6 +22,20 @@
       "when": 1776134857918,
       "tag": "0002_eager_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776540222666,
+      "tag": "0003_high_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1776976427208,
+      "tag": "0004_striped_franklin_storm",
+      "breakpoints": true
     }
   ]
 }

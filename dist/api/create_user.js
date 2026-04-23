@@ -13,9 +13,10 @@ export async function handlerCreateUser(req, res) {
     const hashedPassword = await hashPassword(password);
     const userRes = await createUser({ email, hashedPassword });
     respondWithJSON(res, 201, {
-        id: `${userRes.id}`,
-        email: `${userRes.email}`,
-        createdAt: `${userRes.createdAt}`,
-        updatedAt: `${userRes.updatedAt}`,
+        id: userRes.id,
+        email: userRes.email,
+        createdAt: userRes.createdAt,
+        updatedAt: userRes.updatedAt,
+        isChirpyRed: userRes.isChirpyRed
     });
 }

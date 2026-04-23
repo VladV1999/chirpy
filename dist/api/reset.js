@@ -36,6 +36,7 @@ export async function handlerResetCredentials(req, res) {
         email: updatedUser.email,
         createdAt: updatedUser.createdAt,
         updatedAt: updatedUser.updatedAt,
+        isChirpyRed: updatedUser.isChirpyRed,
     };
     respondWithJSON(res, 200, payload);
 }

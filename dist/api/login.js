@@ -39,6 +39,7 @@ export async function handlerLogin(req, res) {
         email: user.email,
         token: token,
         refreshToken: refreshDB.token,
+        isChirpyRed: user.isChirpyRed,
     };
     respondWithJSON(res, 200, userRes);
 }

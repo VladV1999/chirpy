@@ -10,6 +10,7 @@ export type UserResponse = {
     email: string,
     token: string,
     refreshToken: string,
+    isChirpyRed: boolean,
 }
 
 export type UserWithoutPassword = Omit<UserResponse, "token" | "refreshToken">;
@@ -26,9 +27,10 @@ export async function handlerCreateUser(req: Request, res: Response): Promise<vo
     
     const userRes = await createUser({ email, hashedPassword });
     respondWithJSON(res, 201, {
-        id: `${userRes.id}`,
-        email: `${userRes.email}`,
-        createdAt: `${userRes.createdAt}`,
-        updatedAt: `${userRes.updatedAt}`,
+        id: userRes.id,
+        email: userRes.email,
+        createdAt: userRes.createdAt,
+        updatedAt: userRes.updatedAt,
+        isChirpyRed: userRes.isChirpyRed
     });
 }

@@ -10,6 +10,7 @@ import { middlewareHandlerError } from "./api/error.js";
 import { middlewareLogResponses } from "./api/log_responses.js";
 import { handlerLogin } from "./api/login.js";
 import { middlewareMetricsInc } from "./api/metrics_inc.js";
+import { handlerPolka } from "./api/polka.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { handlerRefresh } from "./api/refresh.js";
 import { handlerResetCredentials } from "./api/reset.js";
@@ -34,6 +35,7 @@ app.get("/api/chirps/:chirpId", handlerDisplayChirp);
 app.delete("/api/chirps/:chirpId", handlerDeleteChirp);
 app.get("/admin/metrics", adminLogRequests);
 app.post("/admin/reset", requestsReset);
+app.post("/api/polka/webhooks", handlerPolka);
 app.use(middlewareHandlerError);
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
