@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getBearerToken, validateJWT } from "../auth/auth.js";
 import { config } from "../config.js";
-import { addChirp, getChirpById, getChirps } from "../db/queries/chirps.js";
+import { addChirp, getChirpByAuthorId, getChirpById, getChirps } from "../db/queries/chirps.js";
 import { BadRequestError } from "./error.js";
 import { respondWithError, respondWithJSON } from "./json.js";
 export async function handlerChirpsAdd(req: Request, res: Response) {
@@ -40,6 +40,16 @@ export async function handlerChirpsAdd(req: Request, res: Response) {
 };
 
 export async function handlerDisplayAllChirps(req: Request, res: Response) {
+    let authorId = "";
+    let authorIdQuery = req.query.authorId;
+    if (typeof authorIdQuery === "string") {
+        authorId = authorIdQuery;
+    }
+    if (authorId !== "") {
+        const chirps = await getChirpByAuthorId(authorId);
+        respondWithJSON(res, 200, chirps);
+        return;
+    }
     const chirps = await getChirps();
     respondWithJSON(res, 200, chirps);
 }

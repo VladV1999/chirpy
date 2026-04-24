@@ -9,11 +9,19 @@ export async function addChirp(chirp) {
     return result;
 }
 export async function getChirps() {
-    const result = await db.select().from(chirps).orderBy(chirps.createdAt);
+    const result = await db.select().from(chirps).orderBy(chirps.userId);
     return result;
 }
 export async function getChirpById(id) {
     const [result] = await db.select().from(chirps).where(eq(chirps.id, id));
+    return result;
+}
+export async function getChirpByAuthorId(id) {
+    const result = await db
+        .select()
+        .from(chirps)
+        .where(eq(chirps.userId, id))
+        .orderBy(chirps.createdAt);
     return result;
 }
 export async function deleteChirp(id) {
