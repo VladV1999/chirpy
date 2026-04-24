@@ -4,6 +4,15 @@ import { config } from "../config.js";
 import { addChirp, getChirpByAuthorId, getChirpById, getChirps } from "../db/queries/chirps.js";
 import { BadRequestError } from "./error.js";
 import { respondWithError, respondWithJSON } from "./json.js";
+
+type chirp = {
+    id: string,
+    body: string,
+    createdAt: Date,
+    updatedAt: Date,
+    userId: string,
+}
+
 export async function handlerChirpsAdd(req: Request, res: Response) {
     type parameters = {
     body: string;
@@ -45,13 +54,37 @@ export async function handlerDisplayAllChirps(req: Request, res: Response) {
     if (typeof authorIdQuery === "string") {
         authorId = authorIdQuery;
     }
+    let sortType = "asc";
+    if (req.query.sort !== undefined &&
+        typeof req.query.sort === "string" &&
+        req.query.sort === "desc"
+    ) {
+        sortType = "desc";
+    }
+    let sortedChirps: chirp[];
     if (authorId !== "") {
         const chirps = await getChirpByAuthorId(authorId);
-        respondWithJSON(res, 200, chirps);
+        sortedChirps = sortChirps(chirps, sortType);
+        respondWithJSON(res, 200, sortedChirps);
         return;
     }
     const chirps = await getChirps();
-    respondWithJSON(res, 200, chirps);
+    sortedChirps = sortChirps(chirps, sortType);
+    respondWithJSON(res, 200, sortedChirps);
+}
+
+function sortChirps(chirps: chirp[], sortType = "asc"): chirp[] {
+    let sortedChirps: chirp[];
+    if (sortType === "asc") {
+        sortedChirps = chirps.toSorted((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime());
+        return sortedChirps;
+    }
+    else if (sortType === "desc") {
+        sortedChirps = chirps.toSorted((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+        return sortedChirps;
+    } else {
+        return chirps;
+    }
 }
 
 export async function handlerDisplayChirp(req: Request, res: Response) {
