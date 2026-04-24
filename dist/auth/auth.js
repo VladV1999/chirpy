@@ -64,3 +64,11 @@ export function makeRefreshToken() {
     const bytes = buf.toString('hex');
     return bytes;
 }
+export async function getAPIKey(req) {
+    const header = await req.get("Authorization");
+    if (header === undefined) {
+        throw new UserNotAuthenticatedError("There is no authorization header in this request!");
+    }
+    const APIKey = header.replace('ApiKey ', '');
+    return APIKey;
+}

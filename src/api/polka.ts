@@ -1,8 +1,18 @@
 import { Request, Response } from "express";
+import { getAPIKey } from "../auth/auth.js";
+import { config } from "../config.js";
 import { updateChirpyRed } from "../db/queries/users.js";
+import { UserNotAuthenticatedError } from "./error.js";
 import { respondWithError, respondWithJSON } from "./json.js";
 
 export async function handlerPolka(req: Request, res: Response) {
+    const APIKey = await getAPIKey(req);
+    if (APIKey === undefined) {
+        throw new UserNotAuthenticatedError("The user is not authenticated with a key!");
+    }
+    if (APIKey !== config.api.polkaKey) {
+        throw new UserNotAuthenticatedError("The API key provided is not authorized!");
+    }
     type parameters = {
         event: string,
         data: {
