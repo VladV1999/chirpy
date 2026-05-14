@@ -112,3 +112,4 @@ npm run dev
 - [ ] Rate limiting per user
 - [ ] React frontend client
 - [ ] Docker + CI/CD pipeline
+- [ ] A simple frontend for interaction
